@@ -1,24 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 #include "roll.h"
 
 /* val is a number in base 6 */
-void print_roll (int val, int n_dice)
+void print_roll (Roll *roll)
 {
-	int sum = 0;
+	assert (roll != NULL);
 
-	while (n_dice-- > 0)
+	unsigned char n_dice = roll_get_n_dice (roll);
+	unsigned char n;
+
+	for (n = 0; n < n_dice; n++)
 	{
-		int digit;
-		digit = val % 6;
-
-		/* Dice rolls are in the [1;6] range */
-		digit += 1;
-		sum += digit;
-		printf ("%d;", digit);
-		val /= 6;
+		unsigned char die = roll_get_die (roll, n);
+		printf ("%d;", die);
 	}
+
+	int sum = roll_get_sum (roll);
 	printf ("%d\n", sum);
 }
 

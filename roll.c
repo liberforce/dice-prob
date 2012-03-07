@@ -2,10 +2,13 @@
 #include <assert.h>   /* for assert */
 #include "roll.h"
 
+#define MAX(x, y) ((x > y) ? (x) : (y))
+
 struct roll
 {
 	char * dice;
 	unsigned char n_dice;
+	char bonus;
 };
 
 Roll * roll_new (unsigned char n_dice)
@@ -43,5 +46,50 @@ void roll_set_id (Roll *roll,
 
 		roll->dice[n_dice] = digit;
 	}
+}
+
+unsigned char roll_get_n_dice (const Roll *roll)
+{
+	assert (roll != NULL);
+	return roll->n_dice;
+}
+
+unsigned char roll_get_bonus (const Roll *roll)
+{
+	assert (roll != NULL);
+	return roll->bonus;
+}
+
+void roll_set_bonus (Roll *roll,
+		char bonus)
+{
+	assert (roll != NULL);
+	roll->bonus = bonus;
+}
+
+unsigned char roll_get_die (const Roll *roll,
+		unsigned char nth_die)
+{
+	assert (roll != NULL);
+	assert (nth_die >= 0);
+	assert (nth_die < roll->n_dice);
+
+	return roll->dice[nth_die];
+}
+
+unsigned int roll_get_sum (const Roll *roll)
+{
+	unsigned char n;
+	assert (roll != NULL);
+	int sum = 0;
+
+	for (n = 0; n < roll->n_dice; n++)
+	{
+		sum += roll_get_die (roll, n);
+	}
+
+	sum += roll_get_bonus (roll);
+
+	return MAX (sum, 0);
 }
 
