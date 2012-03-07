@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
+/* val is a number in base 6 */
 void print_roll (int val, int n_dice)
 {
 	int sum = 0;
@@ -19,10 +20,13 @@ void print_roll (int val, int n_dice)
 		{
 			digit = val;
 		}
-		sum += digit + 1;
-		printf ("%d;", digit + 1);
+
+		/* Dice rolls are in the [1;6] range */
+		digit += 1;
+		sum += digit;
+		printf ("%d;", digit);
 	}
-	printf ("\t%d\n", sum);
+	printf ("%d\n", sum);
 }
 
 int main (int argc, char **argv)
