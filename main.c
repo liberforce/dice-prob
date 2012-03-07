@@ -10,21 +10,13 @@ void print_roll (int val, int n_dice)
 	while (n_dice-- > 0)
 	{
 		int digit;
-
-		if (val >= 6)
-		{
-			digit = val / 6;
-			val -= digit * 6;
-		}
-		else
-		{
-			digit = val;
-		}
+		digit = val % 6;
 
 		/* Dice rolls are in the [1;6] range */
 		digit += 1;
 		sum += digit;
 		printf ("%d;", digit);
+		val /= 6;
 	}
 	printf ("%d\n", sum);
 }
