@@ -15,5 +15,5 @@ void roll_set_bonus (Roll *roll,
 unsigned char roll_get_die (const Roll *roll,
 		unsigned char die);
 
-unsigned int roll_get_sum (const Roll *roll);
+unsigned int roll_get_value (const Roll *roll);
 

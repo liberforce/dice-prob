@@ -18,8 +18,8 @@ void print_roll (Roll *roll)
 		printf ("%d;", die);
 	}
 
-	int sum = roll_get_sum (roll);
-	printf ("%d\n", sum);
+	int value = roll_get_value (roll);
+	printf ("%d\n", value);
 }
 
 int main (int argc, char **argv)

@@ -77,7 +77,7 @@ unsigned char roll_get_die (const Roll *roll,
 	return roll->dice[nth_die];
 }
 
-unsigned int roll_get_sum (const Roll *roll)
+unsigned int roll_get_value (const Roll *roll)
 {
 	unsigned char n;
 	assert (roll != NULL);
