@@ -42,6 +42,7 @@ int main (int argc, char **argv)
 	for (i = 0; i < maxval ; i ++)
 	{
 		roll_set_id (roll, counter++);
+		print_roll (roll);
 	}
 
 	roll_free (roll);
