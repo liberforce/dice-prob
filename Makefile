@@ -1,2 +1,2 @@
 all:
-	gcc -Wall -lm main.c -o dice-prob 
+	gcc -Wall -lm main.c roll.c -o dice-prob 

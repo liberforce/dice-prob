@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "roll.h"
 
 /* val is a number in base 6 */
 void print_roll (int val, int n_dice)
@@ -33,15 +34,17 @@ int main (int argc, char **argv)
 
 	n_dice = atoi (argv[1]);
 
+	Roll *roll = roll_new (n_dice);
 	int counter = 0;
 	int i;
 	int maxval = pow (6, n_dice);
 
 	for (i = 0; i < maxval ; i ++)
 	{
-		print_roll (counter++, n_dice);
+		roll_set_id (roll, counter++);
 	}
 
+	roll_free (roll);
 	return 0;
 }
 
