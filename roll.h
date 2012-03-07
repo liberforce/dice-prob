@@ -9,8 +9,8 @@ void roll_set_id (Roll *roll,
 
 unsigned char roll_get_n_dice (const Roll *roll);
 
-void roll_set_bonus (Roll *roll,
-		char bonus);
+void roll_set_modifier (Roll *roll,
+		char modifier);
 
 unsigned char roll_get_die (const Roll *roll,
 		unsigned char die);

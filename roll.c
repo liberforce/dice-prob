@@ -8,7 +8,7 @@ struct roll
 {
 	char * dice;
 	unsigned char n_dice;
-	char bonus;
+	char modifier;
 };
 
 Roll * roll_new (unsigned char n_dice)
@@ -54,17 +54,17 @@ unsigned char roll_get_n_dice (const Roll *roll)
 	return roll->n_dice;
 }
 
-unsigned char roll_get_bonus (const Roll *roll)
+unsigned char roll_get_modifier (const Roll *roll)
 {
 	assert (roll != NULL);
-	return roll->bonus;
+	return roll->modifier;
 }
 
-void roll_set_bonus (Roll *roll,
-		char bonus)
+void roll_set_modifier (Roll *roll,
+		char modifier)
 {
 	assert (roll != NULL);
-	roll->bonus = bonus;
+	roll->modifier = modifier;
 }
 
 unsigned char roll_get_die (const Roll *roll,
@@ -88,7 +88,7 @@ unsigned int roll_get_value (const Roll *roll)
 		sum += roll_get_die (roll, n);
 	}
 
-	sum += roll_get_bonus (roll);
+	sum += roll_get_modifier (roll);
 
 	return MAX (sum, 0);
 }
