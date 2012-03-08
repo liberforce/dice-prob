@@ -79,13 +79,30 @@ unsigned char roll_get_die (const Roll *roll,
 
 unsigned int roll_get_value (const Roll *roll)
 {
-	unsigned char n;
 	assert (roll != NULL);
-	int sum = 0;
+	assert (roll->n_dice);
 
+	unsigned char n;
+	int sum = 0;
+	int penalty = 0;
+
+	/* Wild die will always be at index 0 */
 	for (n = 0; n < roll->n_dice; n++)
 	{
 		sum += roll_get_die (roll, n);
+	}
+
+	if (roll_get_die (roll, 0) == 6)
+	{
+		sum += 1; /* Give minimum bonus to have finite values */
+	}
+	else if (roll_get_die (roll, 0) == 1)
+	{
+		for (n = 1; n < roll->n_dice; n++)
+		{
+			penalty = MAX (penalty, roll_get_die (roll, n));
+		}
+		sum = sum - penalty - 1;
 	}
 
 	sum += roll_get_modifier (roll);
