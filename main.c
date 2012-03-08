@@ -4,7 +4,6 @@
 #include <assert.h>
 #include "roll.h"
 
-/* val is a number in base 6 */
 void print_roll (Roll *roll)
 {
 	assert (roll != NULL);
@@ -17,6 +16,9 @@ void print_roll (Roll *roll)
 		unsigned char die = roll_get_die (roll, n);
 		printf ("%d;", die);
 	}
+
+	char modifier = roll_get_modifier (roll);
+	printf ("%d;", modifier);
 
 	int value = roll_get_value (roll);
 	printf ("%d\n", value);

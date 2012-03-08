@@ -12,6 +12,8 @@ unsigned char roll_get_n_dice (const Roll *roll);
 void roll_set_modifier (Roll *roll,
 		char modifier);
 
+char roll_get_modifier (const Roll *roll);
+
 unsigned char roll_get_die (const Roll *roll,
 		unsigned char die);
 

@@ -54,7 +54,7 @@ unsigned char roll_get_n_dice (const Roll *roll)
 	return roll->n_dice;
 }
 
-unsigned char roll_get_modifier (const Roll *roll)
+char roll_get_modifier (const Roll *roll)
 {
 	assert (roll != NULL);
 	return roll->modifier;
