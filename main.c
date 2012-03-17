@@ -44,6 +44,14 @@ void print_freq_table (unsigned int *freq,
 	{
 		printf ("%d %g\n", i, (double)freq[i]/(double)n_rolls);
 	}
+
+	printf ("\nCumulated Probabilities\n");
+	double cp = 0;
+	for (i = 0; i < n_freq; i++)
+	{
+		cp += (double)freq[i]/(double)n_rolls;
+		printf ("%d %g\n", i, cp);
+	}
 }
 
 int main (int argc, char **argv)
