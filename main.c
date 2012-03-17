@@ -24,6 +24,21 @@ void print_roll (Roll *roll)
 	printf ("%d\n", value);
 }
 
+void print_freq_table (unsigned int *freq,
+		unsigned char n_freq)
+{
+	assert (freq != NULL);
+
+	unsigned char i;
+
+	printf ("\nFrequencies\n");
+	printf ("n_freq = %d\n", n_freq);
+	for (i = 0; i < n_freq; i++)
+	{
+		printf ("%d %d\n", i, freq[i]);
+	}
+}
+
 int main (int argc, char **argv)
 {
 	if (argc != 2)
@@ -51,15 +66,20 @@ int main (int argc, char **argv)
 	Roll *roll = roll_new (n_dice);
 	roll_set_modifier (roll, modifier);
 
-	int maxval = pow (6, n_dice);
+	int n_rolls = pow (6, n_dice);
+	/* The 0 value, the wild die bonus, need to be taken into account */
+	unsigned char n_freq = 1 + n_dice * 6 + modifier + 1;
+	unsigned int *freq = calloc (n_freq, sizeof (unsigned int));
 	int i;
 
-	for (i = 0; i < maxval ; i++)
+	for (i = 0; i < n_rolls ; i++)
 	{
 		roll_set_id (roll, i);
 		print_roll (roll);
+		freq[roll_get_value (roll)]++;
 	}
 
+	print_freq_table (freq, n_freq);
 	roll_free (roll);
 	return 0;
 }
