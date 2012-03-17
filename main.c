@@ -25,7 +25,8 @@ void print_roll (Roll *roll)
 }
 
 void print_freq_table (unsigned int *freq,
-		unsigned char n_freq)
+		unsigned char n_freq,
+		int n_rolls)
 {
 	assert (freq != NULL);
 
@@ -36,6 +37,12 @@ void print_freq_table (unsigned int *freq,
 	for (i = 0; i < n_freq; i++)
 	{
 		printf ("%d %d\n", i, freq[i]);
+	}
+
+	printf ("\nProbabilities\n");
+	for (i = 0; i < n_freq; i++)
+	{
+		printf ("%d %g\n", i, (double)freq[i]/(double)n_rolls);
 	}
 }
 
@@ -79,7 +86,7 @@ int main (int argc, char **argv)
 		freq[roll_get_value (roll)]++;
 	}
 
-	print_freq_table (freq, n_freq);
+	print_freq_table (freq, n_freq, n_rolls);
 	roll_free (roll);
 	return 0;
 }
