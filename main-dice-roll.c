@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-#include "roll.h"
+#include "dice.h"
 
 int main (int argc, char **argv)
 {
@@ -28,12 +28,12 @@ int main (int argc, char **argv)
 	int n_dice = atoi (str_n_dice);
 	int modifier = atoi (str_modifier);
 
-	Roll *roll = roll_new (n_dice);
-	roll_set_modifier (roll, modifier);
-	int result = roll_roll (roll);
-	roll_debug (roll);
+	Dice *dice = dice_new (n_dice);
+	dice_set_roll_modifier (dice, modifier);
+	int result = dice_roll (dice);
+	dice_debug (dice);
 	printf ("%d\n", result);
-	roll_free (roll);
+	dice_free (dice);
 	return 0;
 }
 

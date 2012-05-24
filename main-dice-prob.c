@@ -2,26 +2,24 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-#include "roll.h"
+#include "dice.h"
 
-void print_roll (Roll *roll)
+void print_dice (Dice *dice, unsigned int result)
 {
-	assert (roll != NULL);
+	assert (dice != NULL);
 
-	unsigned char n_dice = roll_get_n_dice (roll);
+	unsigned char n_dice = dice_get_n_dice (dice);
 	unsigned char n;
 
 	for (n = 0; n < n_dice; n++)
 	{
-		unsigned char die = roll_get_die (roll, n);
+		unsigned char die = dice_get_die (dice, n);
 		printf ("%d;", die);
 	}
 
-	char modifier = roll_get_modifier (roll);
+	char modifier = dice_get_roll_modifier (dice);
 	printf ("%d;", modifier);
-
-	int value = roll_get_value (roll);
-	printf ("%d\n", value);
+	printf ("%d\n", result);
 }
 
 void print_freq_table (unsigned int *freq,
@@ -78,10 +76,11 @@ int main (int argc, char **argv)
 	int n_dice = atoi (str_n_dice);
 	int modifier = atoi (str_modifier);
 
-	Roll *roll = roll_new (n_dice);
-	roll_set_modifier (roll, modifier);
+	Dice *dice = dice_new (n_dice);
+	dice_set_roll_modifier (dice, modifier);
 
 	int n_rolls = pow (6, n_dice);
+
 	/* The 0 value, the wild die bonus, need to be taken into account */
 	unsigned char n_freq = 1 + n_dice * 6 + modifier + 1;
 	unsigned int *freq = calloc (n_freq, sizeof (unsigned int));
@@ -89,13 +88,13 @@ int main (int argc, char **argv)
 
 	for (i = 0; i < n_rolls ; i++)
 	{
-		roll_set_id (roll, i);
-		print_roll (roll);
-		freq[roll_get_value (roll)]++;
+		unsigned int result = dice_get_roll_result_from_int (dice, i);
+		print_dice (dice, result);
+		freq[result]++;
 	}
 
 	print_freq_table (freq, n_freq, n_rolls);
-	roll_free (roll);
+	dice_free (dice);
 	return 0;
 }
 
