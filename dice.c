@@ -130,7 +130,6 @@ int dice_get_roll_result (const Dice *dice)
 		}
 
 		needs_reroll = (roll == 6);
-		printf ("Wild die re-rolled: %d!\n", roll);
 		dice_set_die (dice, 0, roll + dice_get_die (dice, 0));
 	}
 
