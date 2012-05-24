@@ -76,7 +76,7 @@ int main (int argc, char **argv)
 	int n_dice = atoi (str_n_dice);
 	int modifier = atoi (str_modifier);
 
-	Dice *dice = dice_new (n_dice);
+	Dice *dice = dice_new (n_dice, TRUE);
 	dice_set_roll_modifier (dice, modifier);
 
 	int n_rolls = pow (6, n_dice);

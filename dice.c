@@ -11,14 +11,17 @@ struct dice
 {
 	char * roll;
 	unsigned char n_dice;
+	unsigned char is_prob_mode;
 	char modifier;
 };
 
-Dice * dice_new (unsigned char n_dice)
+Dice * dice_new (unsigned char n_dice,
+		unsigned char is_prob_mode)
 {
 	Dice * dice = calloc (1, sizeof (Dice));
 	dice->roll = calloc (n_dice, sizeof (char));
 	dice->n_dice = n_dice;
+	dice->is_prob_mode = is_prob_mode;
 	return dice;
 }
 
@@ -36,18 +39,16 @@ static void dice_set_roll (Dice *dice,
 {
 	assert (dice != NULL);
 	unsigned char n_dice = dice->n_dice;
+	static const int base = 6;
 
 	while (n_dice-- > 0)
 	{
-		/* id is in the [0;5] range */
-		int digit = roll % 6;
-
-		/* A die roll is in the [1;6] range */
-		digit += 1;
-
-		roll /= 6;
-
+		/* Each digit extracted is in the [0;base-1] range 
+		   but possibles values for a die are in the [1;base] range */
+		int digit = (roll % base) + 1;
 		dice->roll[n_dice] = digit;
+
+		roll /= base;
 	}
 }
 
@@ -70,7 +71,7 @@ void dice_set_roll_modifier (Dice *dice,
 	dice->modifier = modifier;
 }
 
-unsigned char dice_get_die (const Dice *dice,
+char dice_get_die (const Dice *dice,
 		unsigned char nth_die)
 {
 	assert (dice != NULL);
@@ -80,7 +81,18 @@ unsigned char dice_get_die (const Dice *dice,
 	return dice->roll[nth_die];
 }
 
-unsigned int dice_get_roll_result (const Dice *dice)
+void dice_set_die (const Dice *dice,
+		unsigned char nth_die,
+		char value)
+{
+	assert (dice != NULL);
+	assert (nth_die >= 0);
+	assert (nth_die < dice->n_dice);
+
+	dice->roll[nth_die] = value;
+}
+
+int dice_get_roll_result (const Dice *dice)
 {
 	assert (dice != NULL);
 	assert (dice->n_dice);
@@ -88,16 +100,23 @@ unsigned int dice_get_roll_result (const Dice *dice)
 	unsigned char n;
 	int sum = 0;
 	int penalty = 0;
+	int needs_reroll = FALSE;
 
-	/* Wild die will always be at index 0 */
-	for (n = 0; n < dice->n_dice; n++)
-	{
-		sum += dice_get_die (dice, n);
-	}
-
+	/* Wild die is always at index 0 */
 	if (dice_get_die (dice, 0) == 6)
 	{
-		sum += 1; /* Give minimum bonus to have finite values */
+		if (dice->is_prob_mode)
+		{
+			needs_reroll = FALSE;
+
+			/* Give minimum bonus to have finite values */
+			dice_set_die (dice, 0, 7);
+		}
+		else
+		{
+			/* Re-roll wild die as long as it gives a 6 */
+			needs_reroll = TRUE;
+		}
 	}
 	else if (dice_get_die (dice, 0) == 1)
 	{
@@ -105,7 +124,20 @@ unsigned int dice_get_roll_result (const Dice *dice)
 		{
 			penalty = MAX (penalty, dice_get_die (dice, n));
 		}
-		sum = sum - penalty - 1;
+		dice_set_die (dice, 0, - penalty);
+	}
+
+	while (needs_reroll)
+	{
+		int n_possible_rolls = pow (6, dice->n_dice);
+		int roll = (rand () % n_possible_rolls) + 1;
+		needs_reroll = (roll == 6);
+		dice_set_die (dice, 0, roll + dice_get_die (dice, 0));
+	}
+
+	for (n = 0; n < dice->n_dice; n++)
+	{
+		sum += dice_get_die (dice, n);
 	}
 
 	sum += dice_get_roll_modifier (dice);
