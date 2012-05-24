@@ -105,18 +105,8 @@ int dice_get_roll_result (const Dice *dice)
 	/* Wild die is always at index 0 */
 	if (dice_get_die (dice, 0) == 6)
 	{
-		if (dice->is_prob_mode)
-		{
-			needs_reroll = FALSE;
-
-			/* Give minimum bonus to have finite values */
-			dice_set_die (dice, 0, 7);
-		}
-		else
-		{
-			/* Re-roll wild die as long as it gives a 6 */
-			needs_reroll = TRUE;
-		}
+		/* Re-roll wild die as long as it gives a 6 */
+		needs_reroll = TRUE;
 	}
 	else if (dice_get_die (dice, 0) == 1)
 	{
@@ -129,9 +119,21 @@ int dice_get_roll_result (const Dice *dice)
 
 	while (needs_reroll)
 	{
-		int n_possible_rolls = pow (6, dice->n_dice);
-		int roll = (rand () % n_possible_rolls) + 1;
+		int roll;
+
+		if (dice->is_prob_mode)
+		{
+			/* Give minimum bonus to have finite values */
+			roll = 1;
+		}
+		else
+		{
+			int n_possible_rolls = pow (6, dice->n_dice);
+			roll = (rand () % n_possible_rolls) + 1;
+		}
+
 		needs_reroll = (roll == 6);
+		printf ("Wild die re-rolled: %d!\n", roll);
 		dice_set_die (dice, 0, roll + dice_get_die (dice, 0));
 	}
 
