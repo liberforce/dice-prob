@@ -101,6 +101,7 @@ int dice_get_roll_result (const Dice *dice)
 	int sum = 0;
 	int penalty = 0;
 	int needs_reroll = FALSE;
+	int needs_penalty = FALSE;
 
 	/* Wild die is always at index 0 */
 	if (dice_get_die (dice, 0) == 6)
@@ -110,11 +111,7 @@ int dice_get_roll_result (const Dice *dice)
 	}
 	else if (dice_get_die (dice, 0) == 1)
 	{
-		for (n = 1; n < dice->n_dice; n++)
-		{
-			penalty = MAX (penalty, dice_get_die (dice, n));
-		}
-		dice_set_die (dice, 0, - penalty);
+		needs_penalty = TRUE;
 	}
 
 	while (needs_reroll)
@@ -137,11 +134,21 @@ int dice_get_roll_result (const Dice *dice)
 		dice_set_die (dice, 0, roll + dice_get_die (dice, 0));
 	}
 
-	for (n = 0; n < dice->n_dice; n++)
+	/* Exclude wild die, we'll process it at the end */
+	for (n = 1; n < dice->n_dice; n++)
 	{
-		sum += dice_get_die (dice, n);
+		int value = dice_get_die (dice, n);
+		penalty = MAX (penalty, value);
+		sum += value;
 	}
 
+	if (needs_penalty)
+	{
+		/* Wild die is discarded, as well as the best other die */
+		dice_set_die (dice, 0, - penalty);
+	}
+
+	sum += dice_get_die (dice, 0);
 	sum += dice_get_roll_modifier (dice);
 
 	return MAX (sum, 0);
