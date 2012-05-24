@@ -1,5 +1,7 @@
 #include <stdlib.h>   /* for calloc */
 #include <assert.h>   /* for assert */
+#include <sys/time.h> /* for gettimeofday */
+#include <math.h>     /* for pow */
 #include "roll.h"
 
 #define MAX(x, y) ((x > y) ? (x) : (y))
@@ -110,3 +112,20 @@ unsigned int roll_get_value (const Roll *roll)
 	return MAX (sum, 0);
 }
 
+
+unsigned int roll_roll (Roll *roll)
+{
+	assert (roll != NULL);
+	assert (roll->n_dice > 0);
+
+	int n_rolls = pow (6, roll->n_dice);
+
+	/* Init random numbers generator */
+	struct timeval tv;
+	gettimeofday (&tv, NULL);
+	srand (tv.tv_usec);
+
+	unsigned int faces = rand () % n_rolls;
+	roll_set_id (roll, faces);
+	return roll_get_value (roll);
+}
