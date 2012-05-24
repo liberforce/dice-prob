@@ -21,3 +21,5 @@ unsigned int roll_get_value (const Roll *roll);
 
 unsigned int roll_roll (Roll *roll);
 
+void roll_debug (const Roll *roll);
+

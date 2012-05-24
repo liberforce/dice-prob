@@ -2,6 +2,7 @@
 #include <assert.h>   /* for assert */
 #include <sys/time.h> /* for gettimeofday */
 #include <math.h>     /* for pow */
+#include <stdio.h>    /* for printf */
 #include "roll.h"
 
 #define MAX(x, y) ((x > y) ? (x) : (y))
@@ -112,7 +113,6 @@ unsigned int roll_get_value (const Roll *roll)
 	return MAX (sum, 0);
 }
 
-
 unsigned int roll_roll (Roll *roll)
 {
 	assert (roll != NULL);
@@ -129,3 +129,24 @@ unsigned int roll_roll (Roll *roll)
 	roll_set_id (roll, faces);
 	return roll_get_value (roll);
 }
+
+void roll_debug (const Roll *roll)
+{
+	assert (roll != NULL);
+
+	unsigned char n_dice = roll_get_n_dice (roll);
+	unsigned char n;
+
+	for (n = 0; n < n_dice; n++)
+	{
+		unsigned char die = roll_get_die (roll, n);
+		printf ("%d;", die);
+	}
+
+	char modifier = roll_get_modifier (roll);
+	printf ("%d = ", modifier);
+
+	int value = roll_get_value (roll);
+	printf ("%d\n", value);
+}
+

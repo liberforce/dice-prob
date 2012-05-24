@@ -31,6 +31,7 @@ int main (int argc, char **argv)
 	Roll *roll = roll_new (n_dice);
 	roll_set_modifier (roll, modifier);
 	int result = roll_roll (roll);
+	roll_debug (roll);
 	printf ("%d\n", result);
 	roll_free (roll);
 	return 0;
