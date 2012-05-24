@@ -182,7 +182,7 @@ void dice_debug (const Dice *dice)
 	}
 
 	char modifier = dice_get_roll_modifier (dice);
-	printf ("modifier %+-d = ;", modifier);
+	printf ("modifier = %+-d;", modifier);
 
 	int value = dice_get_roll_result (dice);
 	printf ("result = %d\n", value);

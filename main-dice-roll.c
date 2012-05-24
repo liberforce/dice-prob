@@ -31,7 +31,6 @@ int main (int argc, char **argv)
 	Dice *dice = dice_new (n_dice, FALSE);
 	dice_set_roll_modifier (dice, modifier);
 	int result = dice_roll (dice);
-	dice_debug (dice);
 	printf ("%d\n", result);
 	dice_free (dice);
 	return 0;
