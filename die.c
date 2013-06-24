@@ -39,9 +39,3 @@ int die_roll (Die *die)
 	return (rand () % die->n_sides + 1);
 }
 
-int die_roll_with_modifier (Die *die,
-		char modifier)
-{
-	return MAX (0, (int) die_roll (die) + modifier);
-}
-
