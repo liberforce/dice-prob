@@ -1,2 +1,5 @@
 dice-prob
+*.dat
+build
+tags
 *~
