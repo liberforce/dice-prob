@@ -2,37 +2,53 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-#include "dice.h"
+#include <glib.h>
+#include "die.h"
 
 int main (int argc, char **argv)
 {
 	if (argc != 2)
 	{
-		printf ("Usage: %s N_DICE\n", argv[0]);
+		/* Valid: 1d6+4 */
+		printf ("Usage: %s N_DICE d N_SIDES ± MODIFIER\n", argv[0]);
 		return -1;
 	}
 
-	char *str_n_dice = argv[1];
-	char *ptr = argv[1];
+	char *n_dice_str = argv[1];
+	char *n_sides_str = NULL;
+	char *modifier_str = NULL;
 
+	char *ptr = argv[1];
 	do
 	{
-		if  (*ptr == 'd' || *ptr == 'D')
+		if (*ptr == 'd' || *ptr == 'D')
 		{
 			*ptr = '\0';
+			n_sides_str = ++ptr;
+		}
+		else if (*ptr == '+' || *ptr == '-')
+		{
+			modifier_str = ptr;
 		}
 	}
 	while (*ptr++);
 
-	char *str_modifier = ptr;
-	int n_dice = atoi (str_n_dice);
-	int modifier = atoi (str_modifier);
+	int n_dice = atoi (n_dice_str);
+	int n_sides = atoi (n_sides_str);
+	int modifier = atoi (modifier_str);
+	int result = 0;
+	Die *die = die_new (n_sides);
+	int i = 0;
 
-	Dice *dice = dice_new (n_dice, FALSE);
-	dice_set_roll_modifier (dice, modifier);
-	int result = dice_roll (dice);
+	for (i = 0; i < n_dice; i++)
+	{
+		int roll = die_roll (die);
+		result += roll;
+	}
+
+	result = MAX (0, result + modifier);
 	printf ("%d\n", result);
-	dice_free (dice);
+	die_free (die);
 	return 0;
 }
 
