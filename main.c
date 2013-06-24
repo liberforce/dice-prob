@@ -5,6 +5,34 @@
 #include <glib.h>
 #include "die.h"
 
+static gboolean is_probability_mode = FALSE;
+static char **remaining_args = NULL;
+static GOptionEntry entries[] = 
+{
+	{
+		"stats",
+		's',
+		0,
+		G_OPTION_ARG_NONE,
+		&is_probability_mode,
+		"Enables statistical study of the roll.",
+		NULL,
+	},
+	{
+		G_OPTION_REMAINING,
+		0,
+		0,
+		G_OPTION_ARG_STRING_ARRAY,
+		&remaining_args,
+		"Roll format descriptor.",
+		NULL,
+	},
+	{
+		NULL
+	}
+};
+
+
 void print_freq_table (unsigned int *freq,
 		unsigned char n_freq,
 		int n_rolls)
@@ -36,19 +64,33 @@ void print_freq_table (unsigned int *freq,
 
 int main (int argc, char **argv)
 {
-	if (argc != 2)
+	GError *error = NULL;
+	GOptionContext *context = g_option_context_new ("ROLL_FORMAT_STRING\n");
+	g_option_context_set_summary (context,
+			"Rolls some dice or shows the odds to get a successful roll.\n"
+			"ROLL_FORMAT_STRING may be for example 1d10+2 or 3d6-1.");
+	g_option_context_add_main_entries (context,
+			entries,
+			NULL);
+	if (! g_option_context_parse (context, &argc, &argv, &error))
 	{
-		/* Valid: 1d6+4 */
-		printf ("Usage: %s N_DICE d N_SIDES ± MODIFIER\n", argv[0]);
-		return -1;
+		g_print ("option parsing failed: %s\n", error->message);
+		exit (1);
 	}
 
-	char *n_dice_str = argv[1];
+	if (remaining_args == NULL)
+	{
+		char *help_str = g_option_context_get_help (context, TRUE, NULL);
+		g_print ("%s", help_str);
+		g_free (help_str);
+		exit (2);
+	}
+
 	char *n_sides_str = NULL;
 	char *modifier_str = NULL;
-	gboolean is_probability_mode = TRUE;
-
-	char *ptr = argv[1];
+	char *roll_format_str = remaining_args[0];
+	char *n_dice_str = roll_format_str;
+	char *ptr = roll_format_str;
 	do
 	{
 		if (*ptr == 'd' || *ptr == 'D')
