@@ -41,24 +41,24 @@ void print_freq_table (unsigned int *freq,
 
 	unsigned char i;
 
-	printf ("\nFrequencies\n");
+	printf ("Frequencies\n");
 	for (i = 0; i < n_freq; i++)
 	{
 		printf ("%d\t%d\n", i, freq[i]);
 	}
 
-	printf ("\nProbabilities\n");
+	printf ("\nProbabilities (result = x)\n");
 	for (i = 0; i < n_freq; i++)
 	{
-		printf ("%d\t%g\n", i, (double)freq[i]/(double)n_rolls);
+		printf ("%d\t%5.1f%%\n", i, 100 * (double)freq[i]/(double)n_rolls);
 	}
 
-	printf ("\nCumulated Probabilities\n");
+	printf ("\nCumulated Probabilities (result <= x)\n");
 	double cp = 0;
 	for (i = 0; i < n_freq; i++)
 	{
 		cp += (double)freq[i]/(double)n_rolls;
-		printf ("%d\t%g\n", i, cp);
+		printf ("%d\t%5.1f%%\n", i, 100 * cp);
 	}
 }
 
