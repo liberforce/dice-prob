@@ -3,9 +3,8 @@
 #include <sys/time.h> /* for gettimeofday */
 #include <math.h>     /* for pow */
 #include <stdio.h>    /* for printf */
+#include <glib.h>     /* for MAX */
 #include "die.h"
-
-#define MAX(x, y) ((x > y) ? (x) : (y))
 
 struct die
 {
