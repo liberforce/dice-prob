@@ -15,8 +15,8 @@ int main (int argc, char **argv)
 	}
 
 	char *n_dice_str = argv[1];
-	const char *n_sides_str = "";
-	const char *modifier_str = "";
+	char *n_sides_str = NULL;
+	char *modifier_str = NULL;
 
 	char *ptr = argv[1];
 	do
@@ -34,8 +34,8 @@ int main (int argc, char **argv)
 	while (*ptr++);
 
 	int n_dice = atoi (n_dice_str);
-	int n_sides = atoi (n_sides_str);
-	int modifier = atoi (modifier_str);
+	int n_sides = (n_sides_str) ? atoi (n_sides_str) : 0;
+	int modifier = (modifier_str) ? atoi (modifier_str) : 0;
 	int result = 0;
 	Die *die = die_new (n_sides);
 	int i = 0;
