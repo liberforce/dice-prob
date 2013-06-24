@@ -66,7 +66,7 @@ int main (int argc, char **argv)
 	int n_dice = atoi (n_dice_str);
 	int n_sides = (n_sides_str) ? atoi (n_sides_str) : 0;
 	int modifier = (modifier_str) ? atoi (modifier_str) : 0;
-	int result = 0;
+	int score = 0; // roll result, including modifiers
 	int i;
 
 	if (is_probability_mode)
@@ -74,7 +74,8 @@ int main (int argc, char **argv)
 		/* For a roll result (which is 1-based) to be used as frequency array
 		 * index (which is 0-based), the 0 value needs to be taken into
 		 * account. It may in fact happen when using a negative modifier */
-		unsigned char n_freq = 1 + n_dice * n_sides + modifier;
+		int max_score = n_dice * n_sides + modifier;
+		int n_freq = max_score + 1;
 		unsigned int *freq = calloc (n_freq, sizeof (unsigned int));
 
 		/* Enumerating all the possible rolls is like counting in the
@@ -82,9 +83,20 @@ int main (int argc, char **argv)
 		int n_rolls = pow (n_sides, n_dice);
 		for (i = 0; i < n_rolls; i++)
 		{
-			int roll = MAX (0, i + n_dice + modifier);
-			result += roll;
-			freq[roll]++;
+			score = 0;
+			int roll = i;
+			int die_index = n_dice;
+
+			// for each die
+			while (die_index-- > 0)
+			{
+				// get rightmost die value
+				score += (roll % n_sides) + 1;
+				// right-shift
+				roll /= n_sides;
+			}
+			score += modifier;
+			freq[score]++;
 		}
 
 		print_freq_table (freq, n_freq, n_rolls);
@@ -96,12 +108,11 @@ int main (int argc, char **argv)
 		Die *die = die_new (n_sides);
 		for (i = 0; i < n_dice; i++)
 		{
-			int roll = die_roll (die);
-			result += roll;
+			score += die_roll (die);
 		}
 
-		result = MAX (0, result + modifier);
-		printf ("%d\n", result);
+		score = MAX (0, score + modifier);
+		printf ("%d\n", score);
 		die_free (die);
 	}
 
