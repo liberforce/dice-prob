@@ -7,7 +7,7 @@ pkg_check_modules (GLIB REQUIRED glib-2.0)
 include_directories (${GLIB_INCLUDE_DIRS})
 link_directories (${GLIB_LIBRARY_DIRS})
 add_executable (roll
-	main-dice-roll.c
+	main.c
 	die.c)
 add_definitions (${GLIB_CFLAGS_OTHER} -g -Wall)
 target_link_libraries (roll ${GLIB_LIBRARIES})
