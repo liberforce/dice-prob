@@ -15,8 +15,8 @@ int main (int argc, char **argv)
 	}
 
 	char *n_dice_str = argv[1];
-	char *n_sides_str = NULL;
-	char *modifier_str = NULL;
+	const char *n_sides_str = "";
+	const char *modifier_str = "";
 
 	char *ptr = argv[1];
 	do
